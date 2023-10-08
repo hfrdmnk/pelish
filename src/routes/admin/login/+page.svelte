@@ -25,7 +25,7 @@
 						<Form.Validation />
 					</Form.Item>
 				</Form.Field>
-				<Form.Button>Submit</Form.Button>
+				<Form.Button class="mt-4">Submit</Form.Button>
 			</Form.Root>
 		</div>
 	</div>
