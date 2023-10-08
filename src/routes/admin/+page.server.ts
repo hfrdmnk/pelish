@@ -19,24 +19,34 @@ export const actions = {
 		}
 		const { shorturl, redirecturl, title, description } = form.data;
 
-		const response = await supabase.from('Links').insert({
+		const response = await supabase.from('links').insert({
 			short_url: shorturl,
 			redirect_url: redirecturl,
 			title,
 			description
 		});
 
-		console.log(response);
-
 		if (response.error) {
-			if (response.error.message.includes('duplicate key value violates unique constraint')) {
+			if (response.error.message?.includes('duplicate key value violates unique constraint')) {
 				return setError(form, 'shorturl', 'This short url is already in use');
 			}
 
 			return fail(500, { form });
 		}
 
-		return { open: false, success: true, form };
+		return { open: false, success: true, action: 'create', form };
+	},
+	deletelink: async ({ request, locals: { supabase } }) => {
+		const formData = await request.formData();
+		const id = formData.get('id');
+
+		const response = await supabase.from('links').delete().eq('id', id);
+
+		if (response.error) {
+			return fail(500, { success: false, action: 'delete' });
+		}
+
+		return { success: true, action: 'delete' };
 	}
 };
 

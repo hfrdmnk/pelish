@@ -20,7 +20,7 @@
 				<Form.Label>Short url*</Form.Label>
 				<div class="flex items-center">
 					<div class="px-4">/</div>
-					<Form.Input placeholder="my-short-url" required />
+					<Form.Input placeholder="my-short-url" />
 				</div>
 				<Form.Description>This is the slug you want to redirect from.</Form.Description>
 				<Form.Validation />
@@ -29,7 +29,7 @@
 		<Form.Field {config} name="redirecturl">
 			<Form.Item>
 				<Form.Label>Redirect url*</Form.Label>
-				<Form.Input placeholder="https://dominikhofer.me" required />
+				<Form.Input placeholder="https://dominikhofer.me" />
 				<Form.Description>This is the url you want to redirect to.</Form.Description>
 				<Form.Validation />
 			</Form.Item>
@@ -37,7 +37,7 @@
 		<Form.Field {config} name="title">
 			<Form.Item>
 				<Form.Label>Title*</Form.Label>
-				<Form.Input placeholder="My personal website" required />
+				<Form.Input placeholder="My personal website" />
 				<Form.Validation />
 			</Form.Item>
 		</Form.Field>
