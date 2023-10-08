@@ -1,6 +1,5 @@
-import type { PageServerLoad } from './$types';
 import { setError, superValidate } from 'sveltekit-superforms/server';
-import { loginFormSchema } from './schema';
+import { loginFormSchema } from '$lib/formSchemas';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
@@ -29,7 +28,7 @@ export const actions = {
 	}
 };
 
-export const load: PageServerLoad = async () => {
+export const load = async () => {
 	const form = await superValidate(loginFormSchema);
 
 	return { form };

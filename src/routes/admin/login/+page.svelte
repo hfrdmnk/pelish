@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Form from '$lib/components/ui/form';
 	import type { SuperValidated } from 'sveltekit-superforms';
-	import { loginFormSchema, type LoginFormSchema } from './schema';
+	import { loginFormSchema, type LoginFormSchema } from '$lib/formSchemas';
 
 	export let form: SuperValidated<LoginFormSchema>;
 </script>

@@ -1,4 +1,6 @@
+import { setError, superValidate } from 'sveltekit-superforms/server';
 import { fail, redirect } from '@sveltejs/kit';
+import { newLinkSchema } from '$lib/formSchemas';
 
 export const actions = {
 	logout: async ({ locals: { supabase } }) => {
@@ -9,5 +11,37 @@ export const actions = {
 		}
 
 		throw redirect(303, '/admin/login');
+	},
+	newlink: async ({ request, locals: { supabase } }) => {
+		const form = await superValidate(request, newLinkSchema);
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+		const { shorturl, redirecturl, title, description } = form.data;
+
+		const response = await supabase.from('Links').insert({
+			short_url: shorturl,
+			redirect_url: redirecturl,
+			title,
+			description
+		});
+
+		console.log(response);
+
+		if (response.error) {
+			if (response.error.message.includes('duplicate key value violates unique constraint')) {
+				return setError(form, 'shorturl', 'This short url is already in use');
+			}
+
+			return fail(500, { form });
+		}
+
+		return { open: false, success: true, form };
 	}
+};
+
+export const load = async () => {
+	const form = await superValidate(newLinkSchema);
+
+	return { form };
 };
