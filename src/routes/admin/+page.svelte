@@ -9,8 +9,8 @@
 	export let data;
 	export let form;
 
-	let { supabase } = data;
-	$: ({ supabase } = data);
+	let { supabase, session } = data;
+	$: ({ supabase, session } = data);
 
 	$: if (form?.success) {
 		if (form?.action === 'create') {
@@ -20,7 +20,6 @@
 		if (form?.action === 'delete') {
 			toast.success('Link deleted successfully!');
 		}
-		getShortUrls();
 	}
 
 	$: if (!form?.success) {
@@ -29,30 +28,13 @@
 		}
 	}
 
-	let shorturls: Database['public']['Tables']['links']['Row'][];
-	async function getShortUrls() {
-		if (!data.session) return;
-		const { data: result } = await data.supabase
-			.from('links')
-			.select('*')
-			.eq('owner_id', data.session.user.id)
-			.order('created_at', { ascending: false });
-
-		result ? (shorturls = result) : [];
-	}
-
-	$: if (data.session) {
-		getShortUrls();
-	}
-
 	const handleDeleteLink = async (id: string) => {
-		const { error } = await data.supabase.from('links').delete().eq('id', id);
+		const { error } = await supabase.from('links').delete().eq('id', id);
 
 		if (error) {
 			toast.error('There was an error deleting the link.');
 		} else {
 			toast.success('Link deleted successfully!');
-			getShortUrls();
 		}
 	};
 </script>
@@ -73,18 +55,16 @@
 			<Button variant="outline">Logout</Button>
 		</form>
 		<div>
-			{#if shorturls}
-				{#each shorturls as shorturl}
-					<h2 class="font-bold">{shorturl.title}</h2>
-					<p>
-						/{shorturl.short_url} &rightarrow; {shorturl.redirect_url}
-					</p>
-					<form method="POST" use:enhance action="?/deletelink">
-						<input type="hidden" name="id" value={shorturl.id} />
-						<Button>Delete</Button>
-					</form>
-				{/each}
-			{/if}
+			{#each data.shorturls as shorturl}
+				<h2 class="font-bold">{shorturl.title}</h2>
+				<p>
+					/{shorturl.short_url} &rightarrow; {shorturl.redirect_url}
+				</p>
+				<form method="POST" use:enhance action="?/deletelink">
+					<input type="hidden" name="id" value={shorturl.id} />
+					<Button>Delete</Button>
+				</form>
+			{/each}
 		</div>
 	</main>
 </div>

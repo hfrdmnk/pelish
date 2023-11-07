@@ -2,19 +2,24 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/publi
 import { createServerClient } from '@supabase/ssr';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import type { Database } from '$lib/database.types';
 
 const supabaseSetup: Handle = async ({ event, resolve }) => {
-	event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-		cookies: {
-			get: (key) => event.cookies.get(key),
-			set: (key, value, options) => {
-				event.cookies.set(key, value, options);
-			},
-			remove: (key, options) => {
-				event.cookies.delete(key, options);
+	event.locals.supabase = createServerClient<Database>(
+		PUBLIC_SUPABASE_URL,
+		PUBLIC_SUPABASE_ANON_KEY,
+		{
+			cookies: {
+				get: (key) => event.cookies.get(key),
+				set: (key, value, options) => {
+					event.cookies.set(key, value, options);
+				},
+				remove: (key, options) => {
+					event.cookies.delete(key, options);
+				}
 			}
 		}
-	});
+	);
 
 	/**
 	 * a little helper that is written for convenience so that instead
