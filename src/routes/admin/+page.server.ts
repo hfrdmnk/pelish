@@ -1,3 +1,7 @@
+/*
+  Handles data fetching and form actions for the /admin route
+*/
+
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { fail, redirect, error } from '@sveltejs/kit';
 import { newLinkSchema } from '$lib/formSchemas';

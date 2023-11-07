@@ -1,3 +1,7 @@
+/*
+  Creates Supabase browser client
+*/
+
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
 import { combineChunks, createBrowserClient, isBrowser, parse } from '@supabase/ssr';
 import type { Database } from '$lib/database.types';
