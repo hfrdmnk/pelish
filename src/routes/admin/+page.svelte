@@ -9,6 +9,9 @@
 	export let data;
 	export let form;
 
+	let { supabase } = data;
+	$: ({ supabase } = data);
+
 	$: if (form?.success) {
 		if (form?.action === 'create') {
 			toast.success('Link created successfully!');
