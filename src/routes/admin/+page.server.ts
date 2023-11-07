@@ -6,7 +6,7 @@ import { setError, superValidate } from 'sveltekit-superforms/server';
 import { fail, redirect, error } from '@sveltejs/kit';
 import { newLinkSchema } from '$lib/formSchemas';
 import type { PageServerLoad } from './$types.js';
-import type { Database } from '$lib/database.types';
+import type { Shorturl } from '$lib/databaseItem.types.js';
 
 export const actions = {
 	logout: async ({ locals: { supabase } }) => {
@@ -71,7 +71,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw error(500, 'There was unfortunately an error fetching your shorturls');
 	}
 
-	const shorturls: Database['public']['Tables']['links']['Row'][] = supabaseData;
+	const shorturls: Shorturl[] = supabaseData;
 
 	const form = await superValidate(newLinkSchema);
 

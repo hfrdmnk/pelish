@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
-	import type { Database } from '$lib/database.types';
 	import { toast } from 'svelte-sonner';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import NewLinkDialog from './NewLinkDialog.svelte';
+	import NewLinkDialog from './new-link-dialog.svelte';
+	import ShorturlsTable from './shorturls-table.svelte';
 
 	export let data;
 	export let form;
@@ -31,7 +31,7 @@
 
 <div class="container mt-8">
 	<Dialog.Root open={form?.open}>
-		<header class="flex justify-between">
+		<header class="flex justify-between mb-16">
 			<h1 class="text-2xl font-bold">Welcome back!</h1>
 
 			<Dialog.Trigger class={buttonVariants({ variant: 'default' })}>
@@ -45,16 +45,7 @@
 			<Button variant="outline">Logout</Button>
 		</form>
 		<div>
-			{#each data.shorturls as shorturl}
-				<h2 class="font-bold">{shorturl.title}</h2>
-				<p>
-					/{shorturl.short_url} &rightarrow; {shorturl.redirect_url}
-				</p>
-				<form method="POST" use:enhance action="?/deletelink">
-					<input type="hidden" name="id" value={shorturl.id} />
-					<Button>Delete</Button>
-				</form>
-			{/each}
+			<ShorturlsTable shorturls={data.shorturls} />
 		</div>
 	</main>
 </div>
