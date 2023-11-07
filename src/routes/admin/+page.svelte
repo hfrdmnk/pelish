@@ -27,16 +27,6 @@
 			toast.error('There was an error deleting the link.');
 		}
 	}
-
-	const handleDeleteLink = async (id: string) => {
-		const { error } = await supabase.from('links').delete().eq('id', id);
-
-		if (error) {
-			toast.error('There was an error deleting the link.');
-		} else {
-			toast.success('Link deleted successfully!');
-		}
-	};
 </script>
 
 <div class="container mt-8">
