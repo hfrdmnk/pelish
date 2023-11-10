@@ -1,3 +1,7 @@
+/*
+  Redirects the user accordingly
+*/
+
 import { redirect, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import type { Shorturl } from '$lib/databaseItem.types';
@@ -16,7 +20,7 @@ export const GET: RequestHandler = async (event) => {
 		.single();
 
 	if (supabaseError) {
-		throw error(500, 'There was unfortunately an error fetching your shorturls');
+		throw error(500, "This shorturl doesn't exist, sorry 🥲");
 	}
 
 	const shorturl: Shorturl = supabaseData;
