@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import type { Shorturl } from '$lib/databaseItem.types';
 
-	import { createTable, Render, Subscribe } from 'svelte-headless-table';
+	import { createTable, Render, Subscribe, createRender } from 'svelte-headless-table';
 	import { readable } from 'svelte/store';
 	import * as Table from '$lib/components/ui/table';
+	import ShorturlsTableActions from './shorturls-table-actions.svelte';
 
 	export let shorturls: Shorturl[];
 
@@ -24,6 +23,13 @@
 		table.column({
 			accessor: 'redirect_url',
 			header: 'Redirect URL'
+		}),
+		table.column({
+			accessor: (item) => item,
+			header: '',
+			cell: (item) => {
+				return createRender(ShorturlsTableActions, { item: item.value });
+			}
 		})
 	]);
 
