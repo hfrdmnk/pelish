@@ -2,14 +2,20 @@
 	import type { Shorturl } from '$lib/databaseItem.types';
 
 	import { createTable, Render, Subscribe, createRender } from 'svelte-headless-table';
-	import { readable } from 'svelte/store';
+	import { writable } from 'svelte/store';
 	import * as Table from '$lib/components/ui/table';
 	import ShorturlsTableActions from './shorturls-table-actions.svelte';
+	import type { ActionData } from './$types';
 
 	export let shorturls: Shorturl[];
+	export let formData: ActionData;
+
+	$: {
+		console.log(formData);
+	}
 
 	// Generate table
-	const table = createTable(readable(shorturls));
+	const table = createTable(writable(shorturls));
 
 	const columns = table.createColumns([
 		table.column({
@@ -28,7 +34,7 @@
 			accessor: (item) => item,
 			header: '',
 			cell: (item) => {
-				return createRender(ShorturlsTableActions, { item: item.value });
+				return createRender(ShorturlsTableActions, { item: item.value, formData });
 			}
 		})
 	]);

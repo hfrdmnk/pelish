@@ -30,7 +30,7 @@
 </script>
 
 <div class="container mt-8">
-	<Dialog.Root open={form?.open}>
+	<Dialog.Root open={form?.createOpen}>
 		<header class="flex justify-between mb-16">
 			<h1 class="text-2xl font-bold">Welcome back!</h1>
 
@@ -38,14 +38,14 @@
 				Create new link
 			</Dialog.Trigger>
 		</header>
-		<NewLinkDialog form={data.form} />
+		<NewLinkDialog form={data.createLinkForm} />
 	</Dialog.Root>
 	<main class="grid grid-cols-[20rem_1fr] gap-8">
 		<form method="POST" use:enhance action="?/logout">
 			<Button variant="outline">Logout</Button>
 		</form>
 		<div>
-			<ShorturlsTable shorturls={data.shorturls} />
+			<ShorturlsTable shorturls={data.shorturls} bind:formData={form} />
 		</div>
 	</main>
 </div>

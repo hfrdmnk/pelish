@@ -14,7 +14,7 @@
 			Create a new short link here. Click save when you're done.
 		</Dialog.Description>
 	</Dialog.Header>
-	<Form.Root method="POST" {form} schema={newLinkSchema} action="?/newlink" let:config>
+	<Form.Root method="POST" {form} schema={newLinkSchema} action="?/create" let:config>
 		<Form.Field {config} name="shorturl">
 			<Form.Item>
 				<Form.Label>Short url*</Form.Label>

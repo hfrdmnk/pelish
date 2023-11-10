@@ -21,3 +21,9 @@ export const newLinkSchema = z.object({
 });
 
 export type NewLinkSchema = typeof newLinkSchema;
+
+export const deleteLinkSchema = z.object({
+	id: z.string()
+});
+
+export type DeleteLinkSchema = typeof deleteLinkSchema;
