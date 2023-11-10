@@ -10,12 +10,12 @@
 	export let shorturls: Shorturl[];
 	export let formData: ActionData;
 
-	$: {
-		console.log(formData);
-	}
+	let shorturlsStore = writable(shorturls);
+
+	$: $shorturlsStore = shorturls;
 
 	// Generate table
-	const table = createTable(writable(shorturls));
+	const table = createTable(shorturlsStore);
 
 	const columns = table.createColumns([
 		table.column({
