@@ -7,6 +7,7 @@ import type { RequestHandler } from './$types';
 import type { Shorturl } from '$lib/databaseItem.types';
 import { UAParser } from 'ua-parser-js';
 import isbot from 'isbot';
+import { geolocation } from '@vercel/edge';
 
 export const GET: RequestHandler = async (event) => {
 	const {
@@ -15,9 +16,8 @@ export const GET: RequestHandler = async (event) => {
 	} = event;
 
 	const requestData = {
-		userAgent: {},
-		location: {},
-		datetime: new Date()
+		userAgent: {} as { browser: UAParser.IBrowser; device: UAParser.IDevice; os: UAParser.IOS },
+		location: geolocation(event.request)
 	};
 
 	const userAgent = event.request.headers.get('user-agent');
@@ -35,6 +35,8 @@ export const GET: RequestHandler = async (event) => {
 			os: uaData.os
 		};
 	}
+
+	console.log(requestData);
 
 	// fetch all relevant shorturls
 	const { data: supabaseData, error: supabaseError } = await supabase
