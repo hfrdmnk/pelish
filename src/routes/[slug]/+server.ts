@@ -4,7 +4,7 @@
 
 import { redirect, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import type { Shorturl } from '$lib/databaseItem.types';
+import type { Link } from '$lib/databaseItem.types';
 import { UAParser } from 'ua-parser-js';
 import isbot from 'isbot';
 
@@ -51,20 +51,20 @@ export const GET: RequestHandler = async (event) => {
 	const { data: supabaseData, error: supabaseError } = await supabase
 		.from('links')
 		.select('*')
-		.eq('short_url', slug)
+		.eq('slug', slug)
 		.single();
 
 	if (supabaseError) {
 		throw error(500, "This shorturl doesn't exist, sorry 🥲");
 	}
 
-	const shorturl: Shorturl = supabaseData;
+	const link: Link = supabaseData;
 
 	// add event to database
 	await supabase.from('events').insert(
 		[
 			{
-				shorturl: shorturl.id,
+				link_id: link.id,
 				ua_browser_name: requestData.userAgent.browser.name,
 				ua_browser_version: requestData.userAgent.browser.version,
 				ua_device_vendor: requestData.userAgent.device.vendor,
@@ -80,5 +80,5 @@ export const GET: RequestHandler = async (event) => {
 		{ returning: 'minimal' }
 	);
 
-	throw redirect(303, shorturl.redirect_url);
+	throw redirect(303, link.redirect_url);
 };

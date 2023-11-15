@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Shorturl } from '$lib/databaseItem.types';
+	import type { Link } from '$lib/databaseItem.types';
 
 	import { createTable, Render, Subscribe, createRender } from 'svelte-headless-table';
 	import { writable } from 'svelte/store';
@@ -7,7 +7,7 @@
 	import ShorturlsTableActions from './shorturls-table-actions.svelte';
 	import type { ActionData } from './$types';
 
-	export let shorturls: Shorturl[];
+	export let shorturls: Link[];
 	export let formData: ActionData;
 
 	let shorturlsStore = writable(shorturls);
@@ -23,8 +23,8 @@
 			header: 'Title'
 		}),
 		table.column({
-			accessor: ({ short_url }) => `/${short_url}`,
-			header: 'Short URL'
+			accessor: ({ slug }) => `/${slug}`,
+			header: 'Slug'
 		}),
 		table.column({
 			accessor: 'redirect_url',

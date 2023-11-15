@@ -6,7 +6,7 @@ import { setError, superValidate } from 'sveltekit-superforms/server';
 import { fail, redirect, error } from '@sveltejs/kit';
 import { deleteLinkSchema, newLinkSchema } from '$lib/formSchemas';
 import type { PageServerLoad } from './$types.js';
-import type { Shorturl } from '$lib/databaseItem.types.js';
+import type { Link } from '$lib/databaseItem.types.js';
 
 export const actions = {
 	logout: async ({ locals: { supabase } }) => {
@@ -26,7 +26,7 @@ export const actions = {
 		const { shorturl, redirecturl, title, description } = form.data;
 
 		const response = await supabase.from('links').insert({
-			short_url: shorturl,
+			slug: shorturl,
 			redirect_url: redirecturl,
 			title,
 			description
@@ -52,6 +52,7 @@ export const actions = {
 		const response = await supabase.from('links').delete().eq('id', id);
 
 		if (response.error) {
+			console.log(response.error.message);
 			return fail(500, { deleteOpen: true, success: false, action: 'delete', form });
 		}
 
@@ -74,7 +75,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw error(500, 'There was unfortunately an error fetching your shorturls');
 	}
 
-	const shorturls: Shorturl[] = supabaseData;
+	const shorturls: Link[] = supabaseData;
 
 	const createLinkForm = await superValidate(newLinkSchema);
 	const deleteLinkForm = await superValidate(deleteLinkSchema);

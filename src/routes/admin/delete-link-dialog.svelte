@@ -2,16 +2,16 @@
 	import { enhance } from '$app/forms';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import { Button } from '$lib/components/ui/button';
-	import type { Shorturl } from '$lib/databaseItem.types';
+	import type { Link } from '$lib/databaseItem.types';
 
-	export let item: Shorturl;
+	export let item: Link;
 </script>
 
 <AlertDialog.Content>
 	<AlertDialog.Header>
 		<AlertDialog.Title
 			>Are you absolutely sure that you want to delete {window.location
-				.origin}/{item.short_url}?</AlertDialog.Title
+				.origin}/{item.slug}?</AlertDialog.Title
 		>
 		<AlertDialog.Description>
 			This action cannot be undone. This will permanently delete all data associated with this
