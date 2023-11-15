@@ -7,20 +7,31 @@ import type { RequestHandler } from './$types';
 import type { Shorturl } from '$lib/databaseItem.types';
 import { UAParser } from 'ua-parser-js';
 import isbot from 'isbot';
-import { geolocation } from '@vercel/edge';
 
 export const GET: RequestHandler = async (event) => {
 	const {
 		params: { slug },
-		locals: { supabase }
+		locals: { supabase },
+		request
 	} = event;
+
+	const headers = request.headers;
+
+	const countryHeader = headers.get('x-vercel-ip-country');
+	const cityHeader = headers.get('x-vercel-ip-city');
+
+	const country = countryHeader ? decodeURI(countryHeader) : null;
+	const city = cityHeader ? decodeURI(cityHeader) : null;
 
 	const requestData = {
 		userAgent: {} as { browser: UAParser.IBrowser; device: UAParser.IDevice; os: UAParser.IOS },
-		location: geolocation(event.request)
+		location: {
+			country,
+			city
+		}
 	};
 
-	const userAgent = event.request.headers.get('user-agent');
+	const userAgent = headers.get('user-agent');
 	if (userAgent) {
 		// check if user is a bot
 		if (isbot(userAgent)) {
@@ -36,8 +47,6 @@ export const GET: RequestHandler = async (event) => {
 		};
 	}
 
-	console.log(requestData);
-
 	// fetch all relevant shorturls
 	const { data: supabaseData, error: supabaseError } = await supabase
 		.from('links')
@@ -50,6 +59,28 @@ export const GET: RequestHandler = async (event) => {
 	}
 
 	const shorturl: Shorturl = supabaseData;
+
+	// add event to database
+	const { data: supabaseWriteData, error: supabaseWriteError } = await supabase
+		.from('events')
+		.insert(
+			[
+				{
+					shorturl: shorturl.id,
+					ua_browser_name: requestData.userAgent.browser.name,
+					ua_browser_version: requestData.userAgent.browser.version,
+					ua_device_vendor: requestData.userAgent.device.vendor,
+					ua_device_model: requestData.userAgent.device.model,
+					ua_device_type: requestData.userAgent.device.type,
+					ua_os_name: requestData.userAgent.os.name,
+					ua_os_version: requestData.userAgent.os.version,
+					location_city: requestData.location.city,
+					location_country: requestData.location.country,
+					created_at: new Date()
+				}
+			],
+			{ returning: 'minimal' }
+		);
 
 	throw redirect(303, shorturl.redirect_url);
 };

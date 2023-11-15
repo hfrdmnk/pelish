@@ -16,7 +16,7 @@ export const newLinkSchema = z.object({
 			'Short URL must be a valid slug (e.g. my-short-url'
 		),
 	redirecturl: z.string().url(),
-	title: z.string().min(3),
+	title: z.string().min(1),
 	description: z.string().min(3).optional()
 });
 
