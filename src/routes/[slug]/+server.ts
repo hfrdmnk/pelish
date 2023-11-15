@@ -61,26 +61,24 @@ export const GET: RequestHandler = async (event) => {
 	const shorturl: Shorturl = supabaseData;
 
 	// add event to database
-	const { data: supabaseWriteData, error: supabaseWriteError } = await supabase
-		.from('events')
-		.insert(
-			[
-				{
-					shorturl: shorturl.id,
-					ua_browser_name: requestData.userAgent.browser.name,
-					ua_browser_version: requestData.userAgent.browser.version,
-					ua_device_vendor: requestData.userAgent.device.vendor,
-					ua_device_model: requestData.userAgent.device.model,
-					ua_device_type: requestData.userAgent.device.type,
-					ua_os_name: requestData.userAgent.os.name,
-					ua_os_version: requestData.userAgent.os.version,
-					location_city: requestData.location.city,
-					location_country: requestData.location.country,
-					created_at: new Date()
-				}
-			],
-			{ returning: 'minimal' }
-		);
+	await supabase.from('events').insert(
+		[
+			{
+				shorturl: shorturl.id,
+				ua_browser_name: requestData.userAgent.browser.name,
+				ua_browser_version: requestData.userAgent.browser.version,
+				ua_device_vendor: requestData.userAgent.device.vendor,
+				ua_device_model: requestData.userAgent.device.model,
+				ua_device_type: requestData.userAgent.device.type,
+				ua_os_name: requestData.userAgent.os.name,
+				ua_os_version: requestData.userAgent.os.version,
+				location_city: requestData.location.city,
+				location_country: requestData.location.country,
+				created_at: new Date()
+			}
+		],
+		{ returning: 'minimal' }
+	);
 
 	throw redirect(303, shorturl.redirect_url);
 };
