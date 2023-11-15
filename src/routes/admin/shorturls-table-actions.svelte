@@ -10,6 +10,8 @@
 	export let item: Link;
 	export let formData: ActionData;
 
+	$: isDialogOpen = formData?.deleteOpen ?? false;
+
 	function copyLink() {
 		navigator.clipboard.writeText(`${window.location.origin}/${item.slug}`);
 		toast.success('Copied shorturl to clipboard!');
@@ -30,12 +32,14 @@
 		<ExternalLink class="w-4 h-4" />
 		<span class="sr-only">Open shorturl</span>
 	</Button>
-	<AlertDialog.Root open={formData?.deleteOpen}
-		><AlertDialog.Trigger>
-			<Button variant="destructive" size="icon" class="relative w-8 h-8 p-0">
-				<Trash2 class="w-4 h-4" />
-				<span class="sr-only">Delete Shorturl</span>
-			</Button>
-		</AlertDialog.Trigger><DeleteLinkDialog {item} /></AlertDialog.Root
+	<Button
+		on:click={() => (isDialogOpen = true)}
+		variant="destructive"
+		size="icon"
+		class="relative w-8 h-8 p-0"
 	>
+		<Trash2 class="w-4 h-4" />
+		<span class="sr-only">Delete Shorturl</span>
+	</Button>
+	<AlertDialog.Root bind:open={isDialogOpen}><DeleteLinkDialog {item} /></AlertDialog.Root>
 </div>

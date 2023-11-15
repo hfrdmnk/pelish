@@ -52,7 +52,6 @@ export const actions = {
 		const response = await supabase.from('links').delete().eq('id', id);
 
 		if (response.error) {
-			console.log(response.error.message);
 			return fail(500, { deleteOpen: true, success: false, action: 'delete', form });
 		}
 
